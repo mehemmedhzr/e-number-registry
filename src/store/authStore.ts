@@ -16,6 +16,7 @@ interface AuthState {
   canEdit: () => boolean
   canDelete: () => boolean
   canSubmit: () => boolean
+  canApprove: () => boolean
   canExport: () => boolean
 }
 
@@ -49,5 +50,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   canEdit: () => get().role === 'icta',
   canDelete: () => get().role === 'icta',
   canSubmit: () => get().role === 'icta',
+  canApprove: () => get().role === 'icta',
   canExport: () => true, // both roles can view/export
 }))

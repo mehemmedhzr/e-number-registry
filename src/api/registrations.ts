@@ -50,6 +50,14 @@ export async function submitRegistration(encId: string): Promise<ApiResponse<Num
   return data
 }
 
+export async function approveRegistration(encId: string): Promise<ApiResponse<NumberRegistration>> {
+  const { data } = await apiClient.post<ApiResponse<NumberRegistration>>(
+    '/icta/approveNumberRegistration',
+    { enc_id: encId },
+  )
+  return data
+}
+
 export async function deleteRegistration(encId: string): Promise<ApiResponse<null>> {
   const { data } = await apiClient.post<ApiResponse<null>>(
     '/icta/deleteNumberRegistration',
@@ -137,6 +145,17 @@ export function isRegistrationDraft(row: { status?: { slug?: string; name?: stri
     if (slug === 'draft' || slug === 'qaralama') return true
     const name = String(st.name || '').toLowerCase().trim()
     if (name.includes('qaralama') || name.includes('draft')) return true
+  }
+  return false
+}
+
+export function isRegistrationSubmitted(row: { status?: { slug?: string; name?: string } }): boolean {
+  const st = row?.status
+  if (st && typeof st === 'object') {
+    const slug = String(st.slug || '').toLowerCase().trim()
+    if (slug === 'submitted' || slug === 'təsdiq') return true
+    const name = String(st.name || '').toLowerCase().trim()
+    if (name.includes('Submitted') || name.includes('Təsdiq')) return true
   }
   return false
 }

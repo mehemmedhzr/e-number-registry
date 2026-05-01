@@ -81,11 +81,11 @@ export interface ExcelImportResponse {
 }
 
 export async function importFromExcel(file: File): Promise<ExcelImportResponse> {
-  const fd = new FormData()
-  fd.append('file', file)
+  const excel_file = new FormData()
+  excel_file.append('excel_file', file)
   const { data } = await apiClient.post<ExcelImportResponse>(
-    '/icta/importNumberRegistrations',
-    fd,
+    '/icta/importNumberRegistrationsFromExcel',
+    excel_file,
   )
   return data
 }

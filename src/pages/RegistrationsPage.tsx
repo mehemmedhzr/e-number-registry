@@ -30,7 +30,7 @@ import {
 } from 'lucide-react'
 import { useRegistrationsList } from '@/hooks/useRegistrations'
 import { useAuthStore } from '@/store/authStore'
-import { isRegistrationDraft } from '@/api/registrations'
+import { approveRegistration, isRegistrationDraft, isRegistrationSubmitted } from '@/api/registrations'
 import { submitRegistration, deleteRegistration } from '@/api/registrations'
 import { formatApiError } from '@/api/client'
 import { formatDate } from '@/lib/utils'
@@ -106,11 +106,11 @@ function ConfirmDialog({
   )
 }
 
-type ActionType = { type: 'submit' | 'delete'; encId: string } | null
+type ActionType = { type: 'submit' | 'delete' | 'approve'; encId: string } | null
 
 export function RegistrationsPage() {
   const navigate = useNavigate()
-  const { role, canCreate, canEdit, canDelete, canSubmit } = useAuthStore()
+  const { role, canCreate, canEdit, canDelete, canSubmit, canApprove } = useAuthStore()
   const { data, loading, error, refetch } = useRegistrationsList()
 
   const [globalFilter, setGlobalFilter] = useState('')
@@ -127,6 +127,27 @@ export function RegistrationsPage() {
       setActionError(null)
       try {
         const res = await submitRegistration(encId)
+        if (res.success) {
+          setAction(null)
+          refetch()
+        } else {
+          setActionError(res.message || 'Təsdiq alınmadı')
+        }
+      } catch (e) {
+        setActionError(formatApiError(e))
+      } finally {
+        setActionLoading(false)
+      }
+    },
+    [refetch],
+  )
+
+  const handleApprove = useCallback(
+    async (encId: string) => {
+      setActionLoading(true)
+      setActionError(null)
+      try {
+        const res = await approveRegistration(encId)
         if (res.success) {
           setAction(null)
           refetch()
@@ -218,7 +239,9 @@ export function RegistrationsPage() {
         enableSorting: false,
         cell: ({ row }) => {
           const reg = row.original
+          console.log(reg)
           const isDraft = isRegistrationDraft(reg)
+          const isSubmitted = isRegistrationSubmitted(reg)
           const enc = reg.enc_id
           return (
             <div className="flex items-center gap-1">
@@ -260,6 +283,17 @@ export function RegistrationsPage() {
                   onClick={() => setAction({ type: 'delete', encId: enc })}
                 >
                   <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
+              {isSubmitted && canApprove() &&(
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  title="Təsdiq et"
+                  className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                  onClick={() => setAction({ type: 'approve', encId: enc })}
+                >
+                  <CheckCircle className="h-4 w-4" />
                 </Button>
               )}
             </div>
@@ -465,6 +499,16 @@ export function RegistrationsPage() {
         variant="success"
         loading={actionLoading}
         onConfirm={() => action && handleSubmit(action.encId)}
+        onCancel={() => { setAction(null); setActionError(null) }}
+      />
+      <ConfirmDialog
+        open={action?.type === 'approve'}
+        title="Qeydiyyatı təsdiq et"
+        description="Bu qeydiyyatı təsdiq etmək istəyirsiniz? Bu əməliyyat geri qaytarılmır."
+        confirmLabel="Təsdiq et"
+        variant="success"
+        loading={actionLoading}
+        onConfirm={() => action && handleApprove(action.encId)}
         onCancel={() => { setAction(null); setActionError(null) }}
       />
       <ConfirmDialog
