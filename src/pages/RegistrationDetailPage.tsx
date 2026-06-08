@@ -15,7 +15,7 @@ import {
   RefreshCw,
 } from 'lucide-react'
 import { useRegistrationDetail } from '@/hooks/useRegistrations'
-import { useAuthStore } from '@/store/authStore'
+import {  useDigitalLoginStore } from '@/store/authStore'
 import { isRegistrationDraft, submitRegistration, deleteRegistration } from '@/api/registrations'
 import { formatApiError, buildFileUrl } from '@/api/client'
 import { formatDate, formatDateTime, formatUserLabel } from '@/lib/utils'
@@ -113,7 +113,7 @@ type ConfirmType = 'submit' | 'delete' | null
 export function RegistrationDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { canEdit, canSubmit, canDelete } = useAuthStore()
+  const { canEdit, canSubmit, canDelete } = useDigitalLoginStore()
   const { data, loading, error, refetch } = useRegistrationDetail(id || null)
 
   const [confirm, setConfirm] = useState<ConfirmType>(null)

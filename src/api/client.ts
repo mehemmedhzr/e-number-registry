@@ -1,7 +1,7 @@
 import axios, { type AxiosError, type AxiosInstance } from 'axios'
 
 export const TOKEN_KEY = 'e_number_auth_token'
-export const ROLE_KEY = 'e_number_auth_role'
+export const COMPANY_TYPE_KEY = 'e_number_company_type'
 const LEGACY_TOKEN_KEY = 'icta_sanctum_token'
 
 export function getApiBaseUrl(): string {
@@ -28,18 +28,18 @@ export function getToken(): string {
 }
 
 export function getStoredRole(): string {
-  return localStorage.getItem(ROLE_KEY)?.trim() || ''
+  return localStorage.getItem(COMPANY_TYPE_KEY)?.trim() || ''
 }
 
 export function clearAuth(): void {
   localStorage.removeItem(TOKEN_KEY)
-  localStorage.removeItem(ROLE_KEY)
+  localStorage.removeItem(COMPANY_TYPE_KEY)
   localStorage.removeItem(LEGACY_TOKEN_KEY)
 }
 
 export function saveAuth(token: string, role: string): void {
   localStorage.setItem(TOKEN_KEY, token)
-  localStorage.setItem(ROLE_KEY, role)
+  localStorage.setItem(COMPANY_TYPE_KEY, role)
 }
 
 export function parseLoginResponse(data: Record<string, unknown>, fallbackRole: string): { token: string; role: string } {
@@ -77,6 +77,7 @@ const apiClient: AxiosInstance = axios.create({
   headers: {
     Accept: 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
+    'Authorization-key': '1234567890',
   },
 })
 
@@ -93,7 +94,7 @@ apiClient.interceptors.response.use(
   (err: AxiosError) => {
     if (err.response?.status === 401) {
       clearAuth()
-      window.location.href = '/login'
+      // window.location.href = '/login'
     }
     return Promise.reject(err)
   },

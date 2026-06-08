@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { useAuthStore } from '@/store/authStore'
+import { useDigitalLoginStore } from '@/store/authStore'
 import { ProtectedRoute } from '@/router/ProtectedRoute'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { LoginPage } from '@/pages/LoginPage'
@@ -13,11 +13,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage'
 import { UnauthorizedPage } from '@/pages/UnauthorizedPage'
 
 export default function App() {
-  const { initialize } = useAuthStore()
 
-  useEffect(() => {
-    initialize()
-  }, [initialize])
 
   return (
     <BrowserRouter>

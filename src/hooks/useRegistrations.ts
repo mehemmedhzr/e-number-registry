@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useAuthStore } from '@/store/authStore'
+import { useDigitalLoginStore } from '@/store/authStore'
 import {
   getAllRegistrationsIkta,
   getAllRegistrationsRinn,
@@ -11,7 +11,7 @@ import { formatApiError } from '@/api/client'
 import type { NumberRegistration } from '@/api/types'
 
 export function useRegistrationsList() {
-  const { role } = useAuthStore()
+  const { companyType } = useDigitalLoginStore()
   const [data, setData] = useState<NumberRegistration[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -20,7 +20,7 @@ export function useRegistrationsList() {
     setLoading(true)
     setError(null)
     try {
-      const res = role === 'rinn'
+      const res = companyType === 'rinn'
         ? await getAllRegistrationsRinn()
         : await getAllRegistrationsIkta()
       if (!res.success) {
@@ -35,7 +35,7 @@ export function useRegistrationsList() {
     } finally {
       setLoading(false)
     }
-  }, [role])
+  }, [companyType])
 
   useEffect(() => {
     load()
@@ -47,7 +47,7 @@ export function useRegistrationsList() {
 }
 
 export function useRegistrationDetail(encId: string | null) {
-  const { role } = useAuthStore()
+  const { companyType } = useDigitalLoginStore()
   const [data, setData] = useState<NumberRegistration | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -57,7 +57,7 @@ export function useRegistrationDetail(encId: string | null) {
     setLoading(true)
     setError(null)
     try {
-      const res = role === 'rinn'
+      const res = companyType === 'rinn'
         ? await getRegistrationRinn(encId)
         : await getRegistrationIkta(encId)
       if (!res.success || !res.payload) {
@@ -70,7 +70,7 @@ export function useRegistrationDetail(encId: string | null) {
     } finally {
       setLoading(false)
     }
-  }, [encId, role])
+  }, [encId, companyType])
 
   useEffect(() => {
     load()

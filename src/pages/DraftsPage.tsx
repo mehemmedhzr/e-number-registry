@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Eye, Pencil, CheckCircle, Trash2, RefreshCw, ClipboardCheck } from 'lucide-react'
 import { useRegistrationsList } from '@/hooks/useRegistrations'
-import { useAuthStore } from '@/store/authStore'
+import { useDigitalLoginStore } from '@/store/authStore'
 import { submitRegistration, deleteRegistration } from '@/api/registrations'
 import { formatApiError } from '@/api/client'
 import { formatDate } from '@/lib/utils'
@@ -24,7 +24,7 @@ type ActionType = { type: 'submit' | 'delete'; encId: string } | null
 
 export function DraftsPage() {
   const navigate = useNavigate()
-  const { canEdit, canSubmit, canDelete } = useAuthStore()
+  const { canEdit, canSubmit, canDelete } = useDigitalLoginStore()
   const { drafts, loading, error, refetch } = useRegistrationsList()
 
   const [action, setAction] = useState<ActionType>(null)

@@ -10,7 +10,7 @@ import {
   Menu,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useAuthStore } from '@/store/authStore'
+import { useDigitalLoginStore } from '@/store/authStore'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 
@@ -52,11 +52,13 @@ const navItems: NavItem[] = [
 ]
 
 export function Sidebar({ open, onClose }: SidebarProps) {
-  const { role, logout } = useAuthStore()
+  const { getCompanyType, logout } = useDigitalLoginStore()
+  const companyType = getCompanyType()
+  console.log(companyType)
 
   const visibleItems = navItems.filter((item) => {
     if (!item.roles) return true
-    return item.roles.includes(role || '')
+    return item.roles.includes(companyType || '')
   })
 
   return (
@@ -100,10 +102,10 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         </div>
 
         {/* Role pill */}
-        {role && (
+        {companyType && (
           <div className="px-5 py-3 border-b border-slate-700">
             <span className="inline-flex items-center rounded-full bg-slate-700 px-2.5 py-1 text-xs font-semibold text-slate-300">
-              {role.toUpperCase()} kabineti
+              {companyType.toUpperCase()} kabineti
             </span>
           </div>
         )}

@@ -7,6 +7,11 @@ export async function getAllRegistrationsIkta(): Promise<ApiResponse<NumberRegis
   const { data } = await apiClient.post<ApiResponse<NumberRegistration[]>>(
     '/icta/getAllNumberRegistrations',
     {},
+    {
+      headers: {
+        // "Authorization": `Bearer ${localStorage.getItem('e_number_auth_token')}`
+      }
+    }
   )
   return data
 }

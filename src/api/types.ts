@@ -1,5 +1,6 @@
 // ─── Standard API Response Envelope ───────────────────────────────────────────
 export interface ApiResponse<T = unknown> {
+  data: any
   success: boolean
   message: string
   payload: T
@@ -14,7 +15,7 @@ export interface LoginRequest {
 
 export interface LoginPayload {
   authToken: string
-  role: UserRole
+  companyType: UserRole
 }
 
 // ─── Registration Status ──────────────────────────────────────────────────────

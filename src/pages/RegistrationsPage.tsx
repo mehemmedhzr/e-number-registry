@@ -29,7 +29,7 @@ import {
   ListOrdered,
 } from 'lucide-react'
 import { useRegistrationsList } from '@/hooks/useRegistrations'
-import { useAuthStore } from '@/store/authStore'
+import { useDigitalLoginStore } from '@/store/authStore'
 import { approveRegistration, isRegistrationDraft, isRegistrationSubmitted } from '@/api/registrations'
 import { submitRegistration, deleteRegistration } from '@/api/registrations'
 import { formatApiError } from '@/api/client'
@@ -110,7 +110,7 @@ type ActionType = { type: 'submit' | 'delete' | 'approve'; encId: string } | nul
 
 export function RegistrationsPage() {
   const navigate = useNavigate()
-  const { role, canCreate, canEdit, canDelete, canSubmit, canApprove } = useAuthStore()
+  const { companyType, canCreate, canEdit, canDelete, canSubmit, canApprove } = useDigitalLoginStore()
   const { data, loading, error, refetch } = useRegistrationsList()
 
   const [globalFilter, setGlobalFilter] = useState('')
@@ -324,7 +324,7 @@ export function RegistrationsPage() {
         <div>
           <h2 className="text-xl font-bold text-slate-900">Ümumi reyestr</h2>
           <p className="text-sm text-slate-500">
-            {role === 'icta' ? 'IKTA' : 'RINN'} — Nömrə qeydiyyatları
+            {companyType === 'icta' ? 'İKTA' : 'RİNN'} — Nömrə qeydiyyatları
           </p>
         </div>
         <div className="sm:ml-auto flex items-center gap-2 flex-wrap">

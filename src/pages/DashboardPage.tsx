@@ -7,11 +7,11 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { useAuthStore } from '@/store/authStore'
+import { useDigitalLoginStore } from '@/store/authStore'
 import { useRegistrationsList } from '@/hooks/useRegistrations'
 
 export function DashboardPage() {
-  const { role, canCreate } = useAuthStore()
+  const { companyType, canCreate } = useDigitalLoginStore()
   const { data, drafts, loading } = useRegistrationsList()
 
   const stats = [
@@ -26,7 +26,7 @@ export function DashboardPage() {
       value: loading ? '…' : drafts.length,
       icon: <ClipboardCheck className="h-5 w-5 text-amber-500" />,
       color: 'bg-amber-50',
-      hidden: role !== 'icta',
+      hidden: companyType !== 'icta',
     },
     {
       label: 'Təsdiq olunmuş',
@@ -49,7 +49,7 @@ export function DashboardPage() {
       to: '/registrations/create',
       icon: <PlusCircle className="h-5 w-5" />,
     },
-    role === 'icta' && {
+    companyType === 'icta' && {
       label: 'Qaralamalar',
       desc: 'Gözləyən qeydiyyatları idarə edin',
       to: '/registrations/drafts',
@@ -62,7 +62,7 @@ export function DashboardPage() {
       <div>
         <h2 className="text-2xl font-bold text-slate-900">İdarə paneli</h2>
         <p className="text-slate-500 mt-1">
-          {role === 'icta' ? 'IKTA kabineti' : 'RINN kabineti'} — Xoş gəldiniz
+          {companyType === 'icta' ? 'İKTA kabineti' : 'RİNN kabineti'} — Xoş gəldiniz
         </p>
       </div>
 
