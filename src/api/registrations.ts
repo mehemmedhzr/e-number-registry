@@ -6,7 +6,9 @@ import type { ApiResponse, NumberRegistration, RegistrationFormData } from './ty
 export async function getAllRegistrationsIkta(): Promise<ApiResponse<NumberRegistration[]>> {
   const { data } = await apiClient.post<ApiResponse<NumberRegistration[]>>(
     '/icta/getAllNumberRegistrations',
-    {},
+    {
+      "email": "icta.user@example.com"
+    },
     {
       headers: {
         // "Authorization": `Bearer ${localStorage.getItem('e_number_auth_token')}`
