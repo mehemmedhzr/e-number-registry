@@ -99,6 +99,7 @@ export const useDigitalLoginStore = create<DigitalLoginState>((set, get) => ({
     localStorage.removeItem('e_number_auth_token')
     localStorage.removeItem('e_number_company_type')
     set({ authToken: '', companyType: '', userData: null })
+    window.location.href = '/login'
   },
 
   getAuthToken: () => get().authToken,
