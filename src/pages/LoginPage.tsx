@@ -39,9 +39,9 @@ export function LoginPage() {
         .post("/getDigitalLoginUrl")
         .then((res) => {
           const url = res.data.payload.loginUrl;
-          // window.location.href = url;
-          window.location.href =
-            "http://localhost:5173/login?code=6f85fbce4cee4b799eba6ef559af8dfc";
+          window.location.href = url;
+          // window.location.href =
+          //   "http://localhost:5173/login?code=6f85fbce4cee4b799eba6ef559af8dfc";
         })
         .catch((err) => {
           console.log(err);
