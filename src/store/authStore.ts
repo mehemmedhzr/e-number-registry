@@ -38,20 +38,12 @@ interface CompanyData {
 }
 
 interface DigitalLoginState {
-  isDigitalLogin: boolean,
-  accessToken: string,
-  idToken: string,
   authToken: string,
   companyType: string,
   userData: UserData | null,
 
   initialize: () => void,
-  setIsDigitalLogin: (a: boolean) => void,
-  setAuthTokens: (a: string, b: string) => void,
   setAuth: (a: string, b: UserRole) => void
-  getAccessToken: () => string | null,
-  getIdToken: () => string | null,
-  getDigitalLogin: () => boolean,
   getAuthToken: () => string | null,
   getUserData: () => UserData | null,
   getCompanyType: () => string | null,
@@ -68,32 +60,18 @@ interface DigitalLoginState {
 }
 
 export const useDigitalLoginStore = create<DigitalLoginState>((set, get) => ({
-  isDigitalLogin: localStorage.getItem('accessToken') && localStorage.getItem('idToken') ? true : false,
-  accessToken: '',
-  idToken: '',
   authToken: '',
   companyType: '',
   userData: null,
 
   initialize() {
     console.log(0)
-    const accessToken = localStorage.getItem('accessToken')
-    const idToken = localStorage.getItem('idToken')
     const authToken = localStorage.getItem('e_number_auth_token')
 
     const companyType = localStorage.getItem('e_number_company_type')
-    if (companyType) {
-      set({ companyType })
-    }
 
-    if (accessToken && idToken) {
-      set({ accessToken, idToken })
-      console.log(1)
-    } else {
-      set({ accessToken: '', idToken: '' })
-      set({ isDigitalLogin: false })
-      console.log(2)
-    }
+    if (companyType) set({ companyType })
+
 
     if (authToken && !get().userData) {
       set({ authToken })
@@ -112,30 +90,17 @@ export const useDigitalLoginStore = create<DigitalLoginState>((set, get) => ({
     }
   },
 
-  setIsDigitalLogin: (isDigitalLogin) => set({ isDigitalLogin: isDigitalLogin }),
-
-  setAuthTokens(accessToken, idToken) {
-    localStorage.setItem('accessToken', accessToken)
-    localStorage.setItem('idToken', idToken)
-    set({ accessToken, idToken })
-  },
-
   setAuth(authToken, companyType) {
     saveAuth(authToken, companyType);
     set({ authToken, companyType });
   },
 
   logout() {
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('idToken')
     localStorage.removeItem('e_number_auth_token')
     localStorage.removeItem('e_number_company_type')
-    set({ isDigitalLogin: false, accessToken: '', idToken: '', authToken: '', companyType: '', userData: null })
+    set({ authToken: '', companyType: '', userData: null })
   },
 
-  getAccessToken: () => get().accessToken,
-  getIdToken: () => get().idToken,
-  getDigitalLogin: () => get().isDigitalLogin,
   getAuthToken: () => get().authToken,
   getUserData: () => get().userData,
   getCompanyType: () => get().companyType,

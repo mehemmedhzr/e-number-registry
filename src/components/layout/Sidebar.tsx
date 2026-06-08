@@ -142,10 +142,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           <Button
             variant="ghost"
             className="w-full justify-start text-slate-300 hover:text-white hover:bg-slate-800"
-            onClick={() => {
-              logout()
-              window.location.href = '/login'
-            }}
+            onClick={() => logout()}
           >
             <LogOut className="h-4 w-4" />
             <span>Çıxış</span>
